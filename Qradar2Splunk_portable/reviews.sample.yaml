@@ -1,0 +1,9 @@
+reviews:
+  Suspicious_Logon:
+    status: pending
+    owner: security-operations
+    notes: Validate against last 7 days of Splunk authentication data.
+  Multiple_Failed_Logins:
+    status: pending
+    owner: detection-engineering
+    notes: Confirm threshold and CIM mapping before approval.

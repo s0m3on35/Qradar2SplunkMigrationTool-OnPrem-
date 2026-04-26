@@ -1,0 +1,3 @@
+[application]
+owner = admin
+access = read : [ * ], write : [ admin ]
