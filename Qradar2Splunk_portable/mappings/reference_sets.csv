@@ -1,3 +1,0 @@
-set_name,lookup_csv_path,key_field
-Suspicious_IPs,lookups/suspicious_ips.csv,ip
-VIP_Users,lookups/vip_users.csv,user

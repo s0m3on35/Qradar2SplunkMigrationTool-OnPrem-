@@ -1,5 +1,0 @@
-name,aql,enabled,cron,notable,severity,description,throttle_window,risk_score,throttle_keys
-Suspicious Logon,SELECT * FROM events WHERE username = 'admin' AND sourceip != '10.0.0.1' LAST 15 MINUTES,true,*/5 * * * *,true,high,Admin logon from non-whitelisted IP,15m,80,user,src
-Multiple Failed Logins,SELECT COUNT(*) as fail_count, username FROM events WHERE eventname LIKE '%failed%' LAST 10 MINUTES GROUP BY username HAVING fail_count > 5,true,*/10 * * * *,true,medium,Multiple failed logins per user in 10m,30m,50,user
-Outbound to Rare Country,SELECT * FROM events WHERE destinationip IN ('203.0.113.10','198.51.100.20') LAST 60 MINUTES,true,*/15 * * * *,false,low,Outbound traffic to rare IPs in 60m,0,20,src,dest
-Regex Match Example,SELECT * FROM events WHERE url matches '.*(/wp-admin|/xmlrpc)\b.*' LAST 5 MINUTES,true,*/5 * * * *,true,critical,Access to suspicious paths,15m,40,src
