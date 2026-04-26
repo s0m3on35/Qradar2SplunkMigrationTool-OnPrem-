@@ -1,0 +1,34 @@
+environment: lab-onprem
+
+inputs:
+  csv: samples/qradar_rules.csv
+  xml: samples/qradar_rules_export.xml
+
+mappings:
+  field_map: mappings/field_map.yaml
+  building_blocks: mappings/building_blocks.csv
+  reference_sets: mappings/reference_sets.csv
+
+splunk:
+  app: My_SIEM_Migration
+  default_index: main
+  enterprise_security: false
+  disable_searches: true
+  url: https://splunk-search-head.example.local:8089
+  username: admin
+  password: change-me
+  verify_ssl: false
+  validate: false
+  execute_sample: false
+  sample_earliest: "-24h"
+  sample_latest: now
+
+qradar:
+  url: https://qradar-console.example.local
+  api_version: "19.0"
+  token: change-me
+  verify_ssl: false
+  export: false
+
+reviews:
+  path: reviews.sample.yaml

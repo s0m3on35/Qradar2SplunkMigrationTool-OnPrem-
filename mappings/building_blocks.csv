@@ -1,0 +1,3 @@
+name,expression_aql
+BB:Privileged Accounts,username IN ('admin','root','administrator','svc_%')
+BB:Internal Networks,sourceip LIKE '10.%' OR sourceip LIKE '192.168.%' OR sourceip LIKE '172.16.%'

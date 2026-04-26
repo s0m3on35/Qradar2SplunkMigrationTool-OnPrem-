@@ -1,0 +1,16 @@
+sourceip: src
+destinationip: dest
+sourceport: src_port
+destinationport: dest_port
+username: user
+domainname: dest_domain
+url: url
+bytes: bytes
+protocolname: transport
+qid: signature_id
+eventname: signature
+logsourceid: vendor_product
+srcip: src
+dstip: dest
+srcport: src_port
+dstport: dest_port

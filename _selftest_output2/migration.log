@@ -1,0 +1,6 @@
+2025-09-22 23:22:23,880 WARNING Cron inválido 'true', usando '* * * * *'
+2025-09-22 23:22:23,881 WARNING Severidad desconocida 'true', usando 'medium'
+2025-09-22 23:22:23,881 WARNING Throttle inválido 'Multiple failed logins per user in 10m', usando '15m'
+2025-09-22 23:22:23,881 WARNING Cron inválido 'true', usando '* * * * *'
+2025-09-22 23:22:23,881 WARNING Severidad desconocida 'false', usando 'medium'
+2025-09-22 23:22:23,881 WARNING Throttle inválido 'Outbound traffic to rare IPs in 60m', usando '15m'
