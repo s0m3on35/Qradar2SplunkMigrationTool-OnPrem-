@@ -1,0 +1,167 @@
+1. Conversion de reglas QRadar a Splunk
+- Traduce reglas AQL a SPL.
+- Soporta operadores habituales: =, !=, >, <, >=, <=, LIKE, NOT LIKE, IN, NOT IN, matches, IS NULL e IS NOT NULL.
+- Convierte ventanas temporales tipo LAST 15 MINUTES a earliest/latest de Splunk.
+- Interpreta GROUP BY, HAVING y COUNT(*) AS alias.
+- Normaliza nombres de stanzas y evita duplicados.
+
+2. Building Blocks
+- Detecta referencias a Building Blocks de QRadar.
+- Expande expresiones declaradas en mappings/building_blocks.csv.
+- Incluye proteccion contra bucles de expansion.
+
+3. Reference Sets y lookups
+- Declara reference sets equivalentes como lookups de Splunk.
+- Genera transforms.conf para los CSV configurados.
+- Inserta lookup/where en SPL cuando la regla usa IN REFERENCE SET.
+- El linter avisa si el lookup esta declarado pero falta el CSV en app/lookups.
+
+4. Generacion de app Splunk
+- Genera estructura de app Splunk:
+  - app/local/savedsearches.conf
+  - app/local/correlationsearches.conf
+  - app/local/macros.conf
+  - app/local/props.conf
+  - app/local/transforms.conf
+  - app/default/app.conf
+  - app/metadata/local.meta
+  - app/metadata/default.meta
+- Puede empaquetar la app como .tgz instalable con --package.
+- Puede generar busquedas deshabilitadas por defecto con --disable-searches o splunk.disable_searches: true.
+
+5. Throttle, notables y severidad
+- Migra throttle_window y throttle_keys cuando estan definidos.
+- Genera action.notable basico para reglas notables.
+- Normaliza severidades a low, medium, high, critical.
+- Permite perfilar Splunk Enterprise Security y deja avisos si hay notables sin confirmar ES/RBA.
+
+6. Perfil de entorno
+- Soporta migration_profile.sample.yaml.
+- Centraliza:
+  - entradas CSV/XML
+  - mappings
+  - app Splunk
+  - index por defecto
+  - parametros Splunk API
+  - parametros QRadar API
+  - review-state
+  - modo seguro disable_searches
+
+7. Export basico desde QRadar API
+- Con --qradar-export puede exportar inventario basico:
+  - rules
+  - building blocks
+  - reference sets
+  - log sources
+  - log source types
+  - custom properties
+- Genera qradar_inventory.json.
+- Usa SEC token si se configura qradar.token o --qradar-token.
+
+8. Validacion Splunk on-premise
+- Con --validate-splunk valida SPL contra Splunk REST.
+- Usa /services/search/parser.
+- Recoge inventario de indexes y sourcetypes.
+- Detecta indexes/sourcetypes referenciados que no existen.
+- Con --splunk-execute-sample puede ejecutar una muestra por regla en una ventana temporal.
+
+9. Auditoria de mappings
+- Genera mapping_audit.json.
+- Genera mapping_audit.csv.
+- Detecta campos QRadar usados, campos Splunk equivalentes, reglas afectadas y campos sin mapping.
+- Calcula acciones pendientes de mapping y revision.
+
+10. Tracker Excel de migracion
+- Genera migration_tracker.xlsx sin dependencias externas.
+- Hojas incluidas:
+  - Summary
+  - Rules
+  - Fields
+  - Dependencies
+  - Actions
+- Incluye estado de revision, owner, confianza, campos sin mapear, issues y SPL generado.
+
+11. Estado de revision persistente
+- Soporta --review-state con YAML.
+- Permite guardar por regla:
+  - status
+  - owner
+  - notes
+- Integra el estado en report.json y migration_tracker.xlsx.
+
+12. Linter de app Splunk
+- Valida estructura de app.
+- Comprueba ficheros obligatorios.
+- Detecta saved searches sin search, cron faltante, notables sin severidad y lookups declarados sin CSV.
+- Integra errores y warnings en report.json y readiness_report.md.
+
+13. Preflight operativo
+- Con --preflight valida antes de generar nada:
+  - profile existente
+  - rutas de input
+  - mappings
+  - review-state
+  - outdir escribible
+  - credenciales requeridas si se activa QRadar/Splunk API
+  - parametros peligrosos de produccion
+- Genera preflight_report.json.
+- Devuelve exit code 4 si falla.
+
+14. Readiness report
+- Genera readiness_report.md.
+- Indica:
+  - Ready: yes/no
+  - blockers
+  - warnings
+  - conteo de estados auto/partial/manual/unsupported
+- Sirve como checklist final antes de instalar.
+
+15. Manifest de auditoria
+- Genera manifest.json.
+- Incluye:
+  - parametros de ejecucion
+  - profile sanitizado
+  - hashes SHA256 de inputs
+  - hashes SHA256 de outputs
+  - readiness
+- Sanitiza secretos como password, token, authorization, secret y api_key.
+
+16. Reportes principales
+- migration.log
+- report.json
+- compatibility_report.json
+- compatibility_report.html
+- executive_summary.md
+- readiness_report.md
+- mapping_audit.json
+- mapping_audit.csv
+- migration_tracker.xlsx
+- manifest.json
+- preflight_report.json cuando se usa --preflight
+
+17. Modos de uso
+- CLI con flags para automatizacion.
+- Wizard interactivo si se ejecuta sin argumentos.
+- --dry-run para validar sin generar app.
+- --strict para fallar ante errores criticos.
+- --fail-on-warn para bloquear con warnings.
+- --backup para preservar salidas anteriores.
+- --audit-only para generar auditoria/tracker sin escribir la app Splunk.
+- --package para generar .tgz instalable.
+
+18. Portabilidad
+- Python 3.8+.
+- PyYAML opcional: si no esta instalado, lee YAML simple.
+- Sin dependencias externas obligatorias para generar app, reportes y Excel.
+- Scripts run_portable.bat y run_portable.sh.
+
+19. Estado actual
+- La herramienta ya cubre una migracion automatizada y controlada a nivel operativo:
+  - convierte
+  - audita
+  - valida
+  - empaqueta
+  - genera evidencias
+  - mantiene revision humana
+  - instala en modo seguro con busquedas deshabilitadas
+- Lo unico que sigue requiriendo validacion real es conectarla contra QRadar/Splunk on-premise reales y revisar los casos partial/unsupported antes de activar reglas en produccion.
