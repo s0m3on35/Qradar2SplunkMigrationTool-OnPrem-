@@ -156,7 +156,7 @@
 - Scripts run_portable.bat y run_portable.sh.
 
 19. Estado actual
-- La herramienta ya cubre una migracion automatizada y controlada a nivel operativo:
+- La herramienta cubre una migracion automatizada y controlada a nivel operativo:
   - convierte
   - audita
   - valida
